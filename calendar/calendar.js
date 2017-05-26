@@ -1,9 +1,18 @@
+/*
+  i don't try make effective algorithm i want to lear method appendChild() and
+  practical other capabilities
+
+*/
+
+//create calendar
 function createCalendar(id, year, month) {
+
       var elem = document.getElementById(id)
       elem.innerHTML = "";
+
       var date = new Date(year, month-1);
-      var nowDate = date.getMonth();
-      //создание таблицы
+      
+      //effectiv algoritm when you save all node in varible afted add to page, but 
       elem.appendChild(document.createElement('table'))
       elem = elem.firstChild
 
@@ -14,7 +23,7 @@ function createCalendar(id, year, month) {
           if( i != 0 ) {
             temp.appendChild(document.createElement('td'))
             if ( (date.getDay() == 0 && j==6) || date.getDay() == j+1) {
-                if(nowDate == date.getMonth()) { 
+                if(month-1 == date.getMonth()) { 
                   temp.childNodes[j].innerHTML = date.getDate();
                   date.setDate( date.getDate() + 1 );
                 }
@@ -41,10 +50,4 @@ function createCalendar(id, year, month) {
       }
 }
 
-      //fillTable(elem)
-
-
-
-    createCalendar('calendar', 2012, 9)
-
-
+createCalendar('calendar', 2012, 9)
