@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		html, body{
+			height: 100%;
+		}
+		.RSA {
+			width: 400px;
+			height: 100%;
+			border: 1px solid black;
+			margin: 0 auto;
+			padding: 10px;
+		}
+		p{
+			text-align: center;
+			margin-bottom: 0;
+		}
+		h1{
+			text-align: center;
+		}
+		textarea{
+			resize: none; 
+			margin-top: 10px;
+			width: 100%;
+			font-size: 30px;
+		}
+		table{
+			margin: 10px auto;
+		}
+		td{
+			text-align: right;
+		}
+		td:nth-child(3n){
+			text-align: left;
+		}
+		td:nth-child(2n){
+			padding: 0 5px;
+			text-align: center;	
+		}
+		input[type="submit"]{
+			width: 100%;
+		}
+	</style>
+			<script type="text/javascript">
+				function deleteEl(){
+					for(var i=0; i<arguments.length; i++){
+						arguments[i].style = "display: none;";
+					}
+				}
+				function getRandom(min, max){
+					var temp = Math.random() * (max - min) + min;
+					temp = Math.round(temp);
+					return temp;
+				}
+				function powAndMod(a,b,c){
+				// 	var temp = a;
+				// 	for(var i=0, b=b-1; i<b; i++){
+				// 		temp = (temp * a) % c;
+				// 		if(temp==0) break;
+				// 	}
+				// 	return temp;
+				}
+
+				function isSimpleNumber(a){
+					var temp = Math.round(Math.sqrt(a));
+					for (var i = 2; i <= temp; i++) 
+						if(a%i == 0) return false
+					return true
+				}
+
+				function mutuallySimple(a, b) {
+    				var num;
+    				while ( b ) {
+        				num = a % b;
+        				a = b;
+        				b = num;
+    				}
+    				if (Math.abs(a) == 1) {
+        				return true;
+    				}
+    				return false;
+				}
+
+				function simpleWithEyler(eylerFunction) {
+					var temp = getRandom(1, eylerFunction);
+					while(temp > 1){
+						if(mutuallySimple(eylerFunction, temp)) return temp
+						temp = getRandom(1, eylerFunction-1);	
+					}
+					return 1;
+				}
+
+				function findD(e, eylerFunction){
+					var temp = Math.round(eylerFunction/e);
+					while(1){
+						if(temp*e%eylerFunction == 1 && temp!=e) return temp;
+						temp++;
+					}
+				}
+
+				function makeEncripto(str, e, n){
+					var a = [];
+					
+					for(i=0; i<str.length; i++){
+						a[i] = str[i].charCodeAt();
+					}
+					console.log(a.join('-'));
+					for(i=0; i<a.length; i++){
+						a[i] = Math.pow(a[i], e) % n;
+					}
+					console.log(a.join('-'));
+					return a.join('-');
+				}
+
+				function makeDecripto(str,d,n){
+					for(var i=0; i<str.length; i++){
+						str[i] = Math.pow(str[i], d) % n;
+					}
+					for(var i=0; i<str.length; i++){
+						str[i] = String.fromCharCode(str[i]);
+					}
+					return str.join('-')
+				}
+
+				function encription(){
+					deleteEl(document.getElementById("dl"), document.getElementById("nl"), document.getElementById("inputDecripto"));
+
+					var p = document.getElementById('p').value;
+					var q = document.getElementById('q').value;
+					var n = p * q;
+					var result = document.getElementById('result');
+					var eylerFunction = (p-1)*(q-1);
+					var e = simpleWithEyler(eylerFunction);
+					var d = findD(e, eylerFunction);
+					var str = document.getElementById('textarea').value;
+					var encriptionStr = makeEncripto(str, e, n);
+					document.getElementById('textarea2').value = encriptionStr;
+
+					result.innerHTML = "\
+					<tr>\
+						<td>n:</td>\
+						<td>  </td>\
+						<td>" + n + "</td>\
+					</tr>\
+					<tr>\
+						<td>f(n):</td>\
+						<td>  </td>\
+						<td>" + eylerFunction + "</td>\
+					</tr>\
+					<tr>\
+						<td>e:</td>\
+						<td>[2, " + (eylerFunction - 1) + "]</td>\
+						<td>" + e + "</td>\
+					</tr>\
+					<tr>\
+						<td>d:</td>\
+						<td>[" + Math.round(eylerFunction/e) +", inf]</td>\
+						<td>" + d + "</td>\
+					</tr>\
+					<tr>\
+						<td>Открытый ключ</td>\
+						<td></td>\
+						<td>Закрытый ключ</td>\
+					</tr>\
+					<tr>\
+						<td>e = " + e + "; n = " + n + "</td>\
+						<td>  </td>\
+						<td>d = " + d + "; n = " + n + "</td>\
+					</tr>\
+					"
+				}
+
+				function decription(){
+					deleteEl(document.getElementById("pl"), document.getElementById("ql"), document.getElementById("inputEncripto"))
+
+					str=document.getElementById('textarea2').value.split('-');
+					var d = document.getElementById('d').value;
+					var n =document.getElementById('n').value;
+
+					str = makeDecripto(str, d, n);
+					console.log(str);
+				}
+
+				</script>
+</head>
+<body>
+	<main>
+		<div class="RSA">
+			<h1>RSA</h1>
+			<label for="p" id="pl">
+				P = 
+				<input type="text" id="p">
+			</label>
+			<label for="q" style="float: right" id="ql">
+				<input type="text" id="q">
+				= Q
+			</label>
+			<textarea cols="63" rows="5" id="textarea" placeholder="Введите текст, который хотим защифровать"></textarea>
+			<input type="submit" value="защифровать" onclick="encription()" id="inputEncripto">
+			<table id="result" cellpadding="50"></table>
+
+			<label for="e" id="dl">
+				d = 
+				<input type="text" id="d">
+			</label>
+			<label for="n" style="float: right" id="nl">
+				<input type="text" id="n">
+				= n
+			</label>
+			<textarea cols="63" rows="5" id="textarea2" placeholder="Введите текст, который хотим расшифровать"></textarea>
+			<input type="submit" value="расшифровать" onclick="decription()" id="inputDecripto">	
+		</div>
+	</main>
+
+</body>
+</htmlcase '>
