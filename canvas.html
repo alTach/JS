@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		html, body{
+			height: 100%;
+			width: 100%;
+			text-align: center;
+		}
+		main{
+			display: inline-block;
+
+		}
+		canvas{
+			width: 500px;
+			height: 500px;
+			border: 1px solid red;
+		}
+		.buttonItem{
+			display: inline-block;
+			width: 16,6%;
+		}
+		.buttonItem > button{
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	
+	<main>
+		<canvas id="canvas"></canvas>
+		<ul>
+			<li class="buttonItem"><button name="intersectionRectangles">Пересек.прямоугольники</button></li>
+			<li class="buttonItem"><button name="line">Линия</button></li>
+			<li class="buttonItem"><button name="gradient">Градиент</button></li>
+			<li class="buttonItem"><button name="circle">Круги</button></li>
+			<li class="buttonItem"><button name="spectr">Спектр</button></li>
+			<li class="buttonItem"><button name="randomCircle">Рандомные кружки</button></li>
+			<li class="buttonItem"><button name="cleaar">Кнопка-6</button></li>
+		</ul>
+	</main>
+	<script>
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext('2d');
+		//canvas has personal default size, and if we want to afoid stretching we should change width, height
+		canvas.width = parseInt(getComputedStyle(canvas).width);
+		canvas.height = parseInt(getComputedStyle(canvas).height);
+		var w = canvas.width; var h = canvas.height;
+
+
+		//button handler
+		var ul = document.getElementsByTagName("ul")[0];
+		ul.onclick = function(e){
+			switch (e.target.getAttribute("name")) {
+				case "intersectionRectangles": intersectionRectangles(); break;
+				case "line": line(); break;
+				case "gradient": gradient(); break;
+				case "circle": circle(); break;	
+				case "spectr": spectr(); break;
+				case "randomCircle": randomCircle(); break;
+				case "line": line(); break;
+				default: break;	
+			}
+		}
+
+		//draw two intersection rectangls
+		function intersectionRectangles(){
+			//clear canvas
+			ctx.clearRect(0, 0, w, h);
+			//borderColor
+			ctx.strokeStyle = "rgb(0, 255, 0)"
+			//paintBorder
+			ctx.strokeRect(5, 5, 85, 85);
+			//backgroundColor
+			ctx.fillStyle = 'rgb(200, 0, 0)';
+			//fillRectangle
+			ctx.fillRect(10, 10, 50, 50);
+
+			ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+			ctx.fillRect(30, 30, 50, 50);
+		}
+
+		//draw line in canvas
+		function line(){
+			ctx.clearRect(0, 0, w, h);
+			
+			for(var i = 10; i<h; i+=10){
+				//create new Path
+				ctx.beginPath();
+				//move(relocate) the pen to the next position (0, i)
+				ctx.moveTo(0, i);
+				//to draw a line to the coordinats x, y
+				ctx.lineTo(w, i);
+				ctx.strokeStyle = `hsl(${i},80%,50%)`;
+				ctx.stroke();
+			}
+		}
+
+		//градиент
+		function gradient(){
+			ctx.clearRect(0, 0, w, h);
+			for(var i = 0; i<h; i+=1){
+				for(var j = 0; j<w; j+=1){
+					ctx.fillStyle = `hsl(${i},80%,50%)`;
+					ctx.fillRect(j, i, 10, 10);
+				}	
+			}
+		}
+
+		//круги
+		function circle(){
+			ctx.clearRect(0, 0, w, h);
+			for(var i = 20; i<h; i+=41){
+				for(var j = 20; j<w; j+=41){
+					var x = j; //center x
+					var y = i; //center y
+					var r = 20; //radius
+					var startAngle = 0; //start to draw in radian
+					var endAngle = Math.PI * 2; //end to draw in radian
+					var antiClockWise = true;
+					//not for end understad why we use beginPath() in this loop;
+					ctx.strokelStyle = `hsl(${i},80%,50%)`;
+					ctx.beginPath();
+					ctx.arc(x, y, r, startAngle, endAngle, antiClockWise);
+					ctx.stroke();
+				}	
+			}
+		}
+
+		//спектр
+		function spectr(){
+			ctx.clearRect(0, 0, w, h);
+			for(var i = 0; i<500; i+=10){
+				ctx.fillStyle = `hsl(${i},80%,50%)`;
+				ctx.fillRect(i, 0, h, h);
+			}
+		}
+
+		//Рандомные кружки
+		function randomCircle(){
+			// ctx.clearRect(0, 0, w, h);
+			ctx.beginPath();
+			ctx.fillStyle = `hsl(${Math.random()*360},80%,50%)`;
+			ctx.arc(Math.random()*500, Math.random()*500, 100, 0, Math.PI * 2, true);
+			ctx.fill();
+		}
+	</script>
+	
+</body>
+</html>
