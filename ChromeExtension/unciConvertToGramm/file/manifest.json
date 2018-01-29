@@ -1,0 +1,18 @@
+{
+	"manifest_version": 2,
+	"name": "УнцToГрамм" ,
+	"description": "Перевод унций в граммы",
+	"version": "1.0",
+	"browser_action": {
+		"default_popup": "popup.html"
+	},
+	"icons": {
+		"12": "unc.png",
+		"48": "unc.png",
+		"128": "unc.png"
+	},
+	//что бы мы могли работать с некоторыми фунециями вкладки
+	"permissions":[
+		"tabs", "<all_urls>"
+	]
+}
