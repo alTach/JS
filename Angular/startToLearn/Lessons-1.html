@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="muApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+</head>
+<body>
+  <h1>Hello World</h1>
+  <input ng-model="name" ng-change="greetingShow=false">
+  <button ng-click="greetingShow = true">Поздороваться</button>
+  
+  <div ng-show="greetingShow">
+    Привет {{name}} !
+  </div>
+  
+  <script>
+	  angular.module('myApp', [])
+  </script>
+</body>
+</html>
